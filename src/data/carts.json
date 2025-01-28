@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1737963823947,
+    "products": [
+      {
+        "product": 1737963459237,
+        "quantity": 2
+      },
+      {
+        "product": 1234567890124,
+        "quantity": 3
+      },
+      {
+        "product": 1737966381774,
+        "quantity": 5
+      },
+      {
+        "product": 1737966461508,
+        "quantity": 14
+      }
+    ]
+  }
+]

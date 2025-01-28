@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1234567890124,
+    "title": "Tenis under armor",
+    "description": "Tenis que son para correr o hacer ejercicio",
+    "code": "XYZ123",
+    "price": 150,
+    "status": true,
+    "stock": 30,
+    "category": "Categoría U",
+    "thumbnails": []
+  },
+  {
+    "id": 1737963459237,
+    "title": "Gorra puma",
+    "description": "Cachucha con el logotipo de puma , color roja",
+    "code": "ALDLFR0",
+    "price": 150,
+    "status": true,
+    "stock": 65,
+    "category": "Categoría P",
+    "thumbnails": []
+  },
+  {
+    "id": 1737966381774,
+    "title": "Producto Adidas",
+    "description": "Pantalonera deportiva",
+    "code": "LMN123",
+    "price": 350,
+    "status": true,
+    "stock": 30,
+    "category": "Categoría A",
+    "thumbnails": []
+  },
+  {
+    "id": 1737966461508,
+    "title": "Producto Nike",
+    "description": "Tenis para correr",
+    "code": "RNLDT",
+    "price": 500,
+    "status": true,
+    "stock": 100,
+    "category": "Categoría N",
+    "thumbnails": []
+  },
+  {
+    "id": 1737993222590,
+    "title": "Tenis under armor",
+    "description": "Tenis que son para correr o hacer ejercicio",
+    "code": "XYZ123",
+    "price": 150,
+    "status": true,
+    "stock": 30,
+    "category": "Categoría U",
+    "thumbnails": []
+  },
+  {
+    "id": 1737993233212,
+    "title": "Tenis under armor",
+    "description": "Tenis que son para correr o hacer ejercicio",
+    "code": "XYZ123",
+    "price": 150,
+    "status": true,
+    "stock": 30,
+    "category": "Categoría U",
+    "thumbnails": []
+  }
+]
