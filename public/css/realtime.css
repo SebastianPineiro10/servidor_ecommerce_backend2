@@ -1,0 +1,157 @@
+/* Estilos generales */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #eaeaea, #f0f0f5); /* Fondo de gradiente más suave y elegante */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    color: #333;
+    text-align: center; /* Asegura que el texto dentro del body se alinee al centro */
+}
+
+/* Título principal (Agregar nuevo producto) */
+h1 {
+    color: #2c3e50; /* Color oscuro para contraste */
+    margin: 40px 0; /* Espaciado superior e inferior */
+    font-size: 3rem; /* Título grande */
+    font-weight: 700; /* Negrita para destacar */
+    letter-spacing: 3px; /* Espaciado entre letras */
+    text-transform: uppercase; /* Transforma el texto a mayúsculas */
+    width: 100%; /* Asegura que el h1 ocupe el 100% del ancho */
+    display: inline-block; /* Permite que el elemento se comporte como un bloque, pero mantenga su comportamiento inline */
+}
+
+/* Formulario */
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ajuste en los campos del formulario */
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field {
+    padding: 14px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-field:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+.submit-btn {
+    padding: 14px;
+    background-color: #f39c12;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.submit-btn:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+}
+
+/* Lista de productos */
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Tarjetas de productos */
+.product-card {
+    background-color: #f39c12;
+    width: 100%;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen del producto */
+.product-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Botón de eliminar */
+.delete-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.delete-btn:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+/* Títulos y textos dentro de las tarjetas */
+.product-card h3 {
+    font-size: 1.3rem;
+    margin: 15px 0;
+    color: #2c3e50;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.product-card p {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: whitesmoke;
+    font-style: italic;
+}

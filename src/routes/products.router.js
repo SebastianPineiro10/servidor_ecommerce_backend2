@@ -2,12 +2,13 @@ import express from 'express';
 import ProductManager from '../managers/productManager.js';
 
 const productsRouter = express.Router();
-const productManager = new ProductManager();
+// Asegúrate de pasar la ruta correcta aquí
+const productManager = new ProductManager("./src/data/products.json"); // Aquí se corrigió la ruta
 
-// Ruta GET /api/products: Listar productos con límite opcional
-productsRouter.get("/", (req, res) => {
+// Listar productos con límite opcional
+productsRouter.get("/", async (req, res) => {
     const { limit } = req.query;
-    let products = productManager.readProducts();
+    let products = await productManager.getProducts();  // Usando el manager correctamente
 
     if (limit) {
         products = products.slice(0, parseInt(limit));
@@ -16,9 +17,9 @@ productsRouter.get("/", (req, res) => {
     res.status(200).send(products);
 });
 
-// Ruta GET /api/products/:pid: Obtener producto por ID
-productsRouter.get("/:pid", (req, res) => {
-    const product = productManager.getProductById(parseInt(req.params.pid));
+// Obtener producto por ID
+productsRouter.get("/:pid", async (req, res) => {
+    const product = await productManager.getProductById(parseInt(req.params.pid));
 
     if (!product) {
         return res.status(404).send({ message: "Producto no encontrado" });
@@ -27,8 +28,8 @@ productsRouter.get("/:pid", (req, res) => {
     res.status(200).send(product);
 });
 
-// Ruta POST /api/products: Crear un nuevo producto
-productsRouter.post("/", (req, res) => {
+// Crear un nuevo producto
+productsRouter.post("/", async (req, res) => {
     const { title, description, code, price, stock, category, thumbnails } = req.body;
 
     if (!title || !description || !code || !price || !stock || !category) {
@@ -47,14 +48,14 @@ productsRouter.post("/", (req, res) => {
         thumbnails: thumbnails || [],
     };
 
-    const product = productManager.addProduct(newProduct);
+    const product = await productManager.addProduct(newProduct);
     res.status(201).send(product);
 });
 
-// Ruta PUT /api/products/:pid: Actualizar un producto por ID
-productsRouter.put("/:pid", (req, res) => {
+// Actualizar producto por ID
+productsRouter.put("/:pid", async (req, res) => {
     const updatedProduct = req.body;
-    const product = productManager.updateProduct(parseInt(req.params.pid), updatedProduct);
+    const product = await productManager.updateProduct(parseInt(req.params.pid), updatedProduct);
 
     if (!product) {
         return res.status(404).send({ message: "Producto no encontrado" });
@@ -63,9 +64,9 @@ productsRouter.put("/:pid", (req, res) => {
     res.status(200).send(product);
 });
 
-// Ruta DELETE /api/products/:pid: Eliminar un producto por ID
-productsRouter.delete("/:pid", (req, res) => {
-    const success = productManager.deleteProduct(parseInt(req.params.pid));
+// Eliminar producto por ID
+productsRouter.delete("/:pid", async (req, res) => {
+    const success = await productManager.deleteProduct(parseInt(req.params.pid));
 
     if (!success) {
         return res.status(404).send({ message: "Producto no encontrado" });
@@ -75,5 +76,4 @@ productsRouter.delete("/:pid", (req, res) => {
 });
 
 export default productsRouter;
-
 
