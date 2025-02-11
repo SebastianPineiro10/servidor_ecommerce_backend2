@@ -59,11 +59,14 @@
     "thumbnails": []
   },
   {
-    "title": "Tenis under armor",
-    "description": "Tenis que son para correr o hacer ejercicio",
-    "code": "XYZ123",
-    "price": 150,
-    "stock": 30,
-    "category": "Tenis"
+    "id": 1739254393325,
+    "title": "Producto de prueba",
+    "description": "Prueba de postamn",
+    "code": "postamn2040",
+    "price": 30,
+    "status": true,
+    "stock": 20,
+    "category": "prueba",
+    "thumbnails": []
   }
 ]

@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
         try {
             const result = await productManager.deleteProductByCode(code);
             if (result) {
-                io.emit("productDeleted", { code });  // Notificar a todos los clientes que el producto fue eliminado
+                io.emit("productDeleted", { code });  
             } else {
                 console.log("Producto no encontrado para eliminar");
             }

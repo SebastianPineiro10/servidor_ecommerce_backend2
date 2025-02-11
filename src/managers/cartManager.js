@@ -14,11 +14,11 @@ class CartManager {
             const data = fs.readFileSync(cartsFilePath, 'utf-8');
             return JSON.parse(data);
         } catch (error) {
-            if (error.code === 'ENOENT') { // Si el archivo no existe, crearlo vacío
+            if (error.code === 'ENOENT') { 
                 fs.writeFileSync(cartsFilePath, JSON.stringify([]));
                 return [];
             }
-            return []; // Si ocurre otro error, también devolver array vacío
+            return []; 
         }
     }
 
@@ -55,7 +55,7 @@ class CartManager {
         const carts = this.readCarts();
         const updatedCarts = carts.filter(c => c.id !== id);
 
-        if (updatedCarts.length === carts.length) return null; // No encontrado
+        if (updatedCarts.length === carts.length) return null; 
 
         fs.writeFileSync(cartsFilePath, JSON.stringify(updatedCarts, null, 2));
         return true;

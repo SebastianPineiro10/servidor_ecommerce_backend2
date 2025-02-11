@@ -2,13 +2,13 @@ import express from 'express';
 import ProductManager from '../managers/productManager.js';
 
 const productsRouter = express.Router();
-// Asegúrate de pasar la ruta correcta aquí
-const productManager = new ProductManager("./src/data/products.json"); // Aquí se corrigió la ruta
+
+const productManager = new ProductManager("./src/data/products.json"); 
 
 // Listar productos con límite opcional
 productsRouter.get("/", async (req, res) => {
     const { limit } = req.query;
-    let products = await productManager.getProducts();  // Usando el manager correctamente
+    let products = await productManager.getProducts();  
 
     if (limit) {
         products = products.slice(0, parseInt(limit));

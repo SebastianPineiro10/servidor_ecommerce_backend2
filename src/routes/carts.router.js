@@ -21,27 +21,27 @@ cartsRouter.post("/", async (req, res) => {
 
 // Ruta GET /api/carts/:cid: Obtener productos de un carrito por ID con detalles completos de los productos
 cartsRouter.get("/:cid", async (req, res) => {
-    const cartId = parseInt(req.params.cid); // Convertir el ID del carrito a número
+    const cartId = parseInt(req.params.cid); 
     const cart = await cartManager.getCartById(cartId);
 
     if (!cart) {
         return res.status(404).send({ message: "Carrito no encontrado" });
     }
 
-    // Aquí recorremos cada producto del carrito y obtenemos sus detalles completos
+    
     const cartWithProductDetails = await Promise.all(cart.products.map(async (item) => {
         const product = await productManager.getProductById(item.product);
         if (product) {
             return {
-                product,  // Información completa del producto
-                quantity: item.quantity  // Cantidad de ese producto en el carrito
+                product,  
+                quantity: item.quantity  
             };
         }
-    })).filter(item => item !== undefined);  // Filtrar si un producto no es encontrado
+    })).filter(item => item !== undefined);  
 
     res.status(200).send({
         id: cart.id,
-        products: cartWithProductDetails  // Retornar carrito con los detalles completos de los productos
+        products: cartWithProductDetails  
     });
 });
 
@@ -73,8 +73,8 @@ cartsRouter.post("/:cid/products/:pid", async (req, res) => {
 
 // Ruta DELETE /api/carts/:cid/products/:pid: Eliminar un producto del carrito
 cartsRouter.delete("/:cid/products/:pid", async (req, res) => {
-    const cartId = parseInt(req.params.cid); // ID del carrito
-    const productId = parseInt(req.params.pid); // ID del producto a eliminar
+    const cartId = parseInt(req.params.cid); 
+    const productId = parseInt(req.params.pid); 
 
     // Buscar el carrito por ID
     const cart = await cartManager.getCartById(cartId);
