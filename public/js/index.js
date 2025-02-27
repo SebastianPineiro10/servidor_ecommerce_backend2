@@ -4,18 +4,20 @@ const socket = io();
 const form = document.getElementById('formNewProduct');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-
+    
     const newProduct = {
         title: form.title.value,
         description: form.description.value,
         code: form.code.value,
         price: parseFloat(form.price.value),
         stock: parseInt(form.stock.value),
-        category: form.category.value
+        category: form.category.value,
+        status: true,
+        thumbnails: []
     };
-
+    
     socket.emit('newProduct', newProduct);
-
+    
     // Limpiar el formulario
     form.reset();
 });
@@ -24,6 +26,7 @@ form.addEventListener('submit', (e) => {
 socket.on('initialProducts', (products) => {
     const productList = document.getElementById('productsList');
     productList.innerHTML = '';  // Limpiar lista
+    
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.classList.add('product-card');
@@ -52,8 +55,15 @@ socket.on('productAdded', (newProduct) => {
 // Escuchar cuando se elimina un producto
 socket.on('productDeleted', (data) => {
     const productList = document.getElementById('productsList');
-    const productElement = document.querySelector(`[data-code="${data.code}"]`).parentElement;
-    productList.removeChild(productElement);
+    const productElement = document.querySelector(`button[data-code="${data.code}"]`).closest('.product-card');
+    if (productElement) {
+        productList.removeChild(productElement);
+    }
+});
+
+// Escuchar errores de productos
+socket.on('productError', (error) => {
+    alert(`Error: ${error.message}`);
 });
 
 // Eliminar producto

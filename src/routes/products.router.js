@@ -1,79 +1,93 @@
 import express from 'express';
-import ProductManager from '../managers/productManager.js';
+import ProductManagerMongo from '../managers/productManager.mongo.js';
 
 const productsRouter = express.Router();
+const productManager = new ProductManagerMongo();
 
-const productManager = new ProductManager("./src/data/products.json"); 
+// Obtener todos los productos (con filtros, paginación, etc.)
+productsRouter.get('/', async (req, res) => {
+  try {
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+      sort: req.query.sort,
+      query: req.query.query
+    };
 
-// Listar productos con límite opcional
-productsRouter.get("/", async (req, res) => {
-    const { limit } = req.query;
-    let products = await productManager.getProducts();  
-
-    if (limit) {
-        products = products.slice(0, parseInt(limit));
-    }
-
-    res.status(200).send(products);
+    const result = await productManager.getProducts(options);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
 });
 
-// Obtener producto por ID
-productsRouter.get("/:pid", async (req, res) => {
-    const product = await productManager.getProductById(parseInt(req.params.pid));
-
-    if (!product) {
-        return res.status(404).send({ message: "Producto no encontrado" });
-    }
-
-    res.status(200).send(product);
+// Obtener un producto por ID
+productsRouter.get('/:pid', async (req, res) => {
+  try {
+    const product = await productManager.getProductById(req.params.pid);
+    res.status(200).json({
+      status: 'success',
+      payload: product
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'error',
+      message: error.message
+    });
+  }
 });
 
 // Crear un nuevo producto
-productsRouter.post("/", async (req, res) => {
-    const { title, description, code, price, stock, category, thumbnails } = req.body;
-
-    if (!title || !description || !code || !price || !stock || !category) {
-        return res.status(400).send({ message: "Todos los campos son obligatorios" });
-    }
-
-    const newProduct = {
-        id: Date.now(),
-        title,
-        description,
-        code,
-        price,
-        status: true,
-        stock,
-        category,
-        thumbnails: thumbnails || [],
-    };
-
-    const product = await productManager.addProduct(newProduct);
-    res.status(201).send(product);
+productsRouter.post('/', async (req, res) => {
+  try {
+    const newProduct = await productManager.addProduct(req.body);
+    res.status(201).json({
+      status: 'success',
+      message: 'Producto creado exitosamente',
+      payload: newProduct
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'error',
+      message: error.message
+    });
+  }
 });
 
-// Actualizar producto por ID
-productsRouter.put("/:pid", async (req, res) => {
-    const updatedProduct = req.body;
-    const product = await productManager.updateProduct(parseInt(req.params.pid), updatedProduct);
-
-    if (!product) {
-        return res.status(404).send({ message: "Producto no encontrado" });
-    }
-
-    res.status(200).send(product);
+// Actualizar un producto
+productsRouter.put('/:pid', async (req, res) => {
+  try {
+    const updatedProduct = await productManager.updateProduct(req.params.pid, req.body);
+    res.status(200).json({
+      status: 'success',
+      message: 'Producto actualizado exitosamente',
+      payload: updatedProduct
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'error',
+      message: error.message
+    });
+  }
 });
 
-// Eliminar producto por ID
-productsRouter.delete("/:pid", async (req, res) => {
-    const success = await productManager.deleteProduct(parseInt(req.params.pid));
-
-    if (!success) {
-        return res.status(404).send({ message: "Producto no encontrado" });
-    }
-
-    res.status(200).send({ message: "Producto eliminado" });
+// Eliminar un producto
+productsRouter.delete('/:pid', async (req, res) => {
+  try {
+    await productManager.deleteProduct(req.params.pid);
+    res.status(200).json({
+      status: 'success',
+      message: 'Producto eliminado exitosamente'
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'error',
+      message: error.message
+    });
+  }
 });
 
 export default productsRouter;
-

@@ -1,4 +1,4 @@
-import fs from 'fs';
+/* import fs from 'fs';
 
 class ProductManager {
     constructor(path) {
@@ -38,4 +38,4 @@ class ProductManager {
     }
 }
 
-export default ProductManager;
+export default ProductManager; */

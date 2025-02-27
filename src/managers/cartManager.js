@@ -1,4 +1,4 @@
-import fs from 'fs';
+/* import fs from 'fs';
 import path from 'path';
 
 // Obtener el __dirname de manera compatible con ES6 (ESM)
@@ -71,4 +71,4 @@ class CartManager {
     }
 }
 
-export default CartManager;
+export default CartManager; */

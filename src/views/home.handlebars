@@ -1,13 +1,25 @@
-<div>
-    <h1>Home</h1>
-    <h2>Lista de Productos</h2>
-    <div class="product-container">
-        {{#each products}}
-            <div class="product-card">
-                <h3>{{this.title}}</h3>
-                <p><strong>Precio:</strong> ${{this.price}}</p>
-            </div>
-        {{/each}}
-    </div>
+<div class="container mt-4">
+  <h1>Lista de Productos</h1>
+  
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {{#each products}}
+      <div class="col">
+        <div class="card h-100">
+          {{#if thumbnails.length}}
+            <img src="{{thumbnails.[0]}}" class="card-img-top product-thumbnail" alt="{{title}}">
+          {{else}}
+            <div class="card-img-top no-image">Sin imagen</div>
+          {{/if}}
+          <div class="card-body">
+            <h5 class="card-title">{{title}}</h5>
+            <p class="card-text">{{description}}</p>
+            <p class="card-text"><strong>Categoría:</strong> {{category}}</p>
+            <p class="card-text"><strong>Precio:</strong> ${{price}}</p>
+            <p class="card-text"><strong>Stock:</strong> {{stock}}</p>
+            <a href="/products/{{_id}}" class="btn btn-primary">Ver detalles</a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
 </div>
-
