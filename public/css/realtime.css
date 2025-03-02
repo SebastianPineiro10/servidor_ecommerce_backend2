@@ -1,5 +1,5 @@
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background: linear-gradient(135deg, #eaeaea, #f0f0f5);
     margin: 0;
     padding: 0;
@@ -11,11 +11,12 @@ body {
     color: #333;
     text-align: center;
     font-size: 16px; /* Tamaño base de fuente para todo el documento */
+    padding-top: 60px;
 }
 
 h1 {
     color: #2c3e50;
-    margin: 40px 0;
+    margin: 32px 0;
     font-size: 2.5rem; /* Reducido ligeramente para coherencia */
     font-weight: 700;
     letter-spacing: 3px;
@@ -37,9 +38,7 @@ h3 {
     margin: 15px 0;
 }
 
-p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
-    font-size: 1rem; /* Tamaño de texto más pequeño y coherente */
-}
+
 
 .form-container {
     display: grid;
@@ -195,7 +194,10 @@ p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
 }
 
 .card-body {
-    padding: 15px;
+    padding: 18px;
+    background-color: whitesmoke;
+    border-radius: 15px;
+    margin: 10px;
 }
 
 .card-title {
@@ -206,9 +208,6 @@ p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
     text-transform: capitalize;
 }
 
-.card-body {
-    background-color: whitesmoke;
-}
 
 .card-text {
     font-size: 1rem;
@@ -217,11 +216,11 @@ p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
     font-style: italic;
 }
 
-.btn-primary, .btn-success {
+.btn-primary, .btn-success, .btn-info, .btn-warning {
     padding: 10px 15px;
     font-size: 1rem;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 15px;
     color: #fff;
     background-color: #3498db;
     border: none;
@@ -255,6 +254,107 @@ p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
     height: 300px;
     object-fit: cover;
     border-radius: 10px;
+}
+
+.table-responsive {
+    background: #f9f9f9; /* Fondo ligeramente gris para suavizar el contraste */
+    border-radius: 12px; /* Bordes más redondeados para un estilo más suave */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra más difusa para un efecto más moderno */
+    overflow-x: auto;
+    padding: 8px;
+    margin-top: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease; /* Transición para efectos suaves */
+}
+
+.table-responsive:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Sombra más sutil al pasar el mouse */
+}
+
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-responsive th, .table-responsive td {
+    padding: 15px 20px; /* Espaciado interior más amplio para mejor lectura */
+    text-align: left;
+    font-size: 1rem;
+    color: #444; /* Color de texto gris oscuro para mayor legibilidad */
+    vertical-align: middle; /* Alineación vertical centrada para una mejor estética */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+.table-responsive th {
+    background-color: #3498db; /* Color moderno y llamativo para el encabezado */
+    color: #fff; /* Texto blanco para el encabezado */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 8px 8px 0 0; /* Bordes redondeados solo en la parte superior */
+}
+
+.table-responsive tr:nth-child(even) {
+    background-color: #fafafa; /* Fila par con un fondo muy suave */
+}
+
+.table-responsive tr:hover {
+    background-color: #f1f1f1; /* Fondo ligeramente más oscuro cuando se pasa el mouse sobre la fila */
+}
+
+.table-responsive td {
+    border-bottom: 1px solid #e0e0e0; /* Línea de separación sutil entre las celdas */
+}
+
+.table-responsive .table-btn {
+    padding: 8px 18px;
+    background-color: #f39c12;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Efectos suaves en hover */
+    letter-spacing: 1px;
+}
+
+.table-responsive .table-btn:hover {
+    background-color: #e67e22; /* Color más oscuro en hover */
+    transform: translateY(-2px); /* Leve elevación al hacer hover */
+}
+
+.table-responsive .table-btn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); /* Sombra suave al hacer clic */
+}
+
+.table-responsive .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.table-responsive .pagination .page-link {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #3498db;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.table-responsive .pagination .page-link:hover {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.table-responsive .pagination .page-item.active .page-link {
+    background-color: #3498db;
+    color: #fff;
+    border-color: #3498db;
 }
 
 .quantity-control .btn {
@@ -346,6 +446,7 @@ p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
     background-color: #333; /* Gris oscuro para el fondo del navbar */
     padding: 10px 20px;
     width: 100%; /* Asegura que el navbar abarque todo el ancho */
+    height: auto;
     box-sizing: border-box; /* Para que no haya problemas con el padding */
     position: fixed; /* Fija el navbar en la parte superior */
     top: 0;
@@ -353,12 +454,8 @@ p, .card-text, .btn-primary, .btn-success, .pagination .page-link {
     z-index: 1000; /* Asegura que el navbar quede por encima de otros elementos */
 }
 
-/* Asegura que el contenido no quede debajo del navbar */
-body {
-    padding-top: 60px; /* Ajusta el contenido para que no quede oculto debajo del navbar */
-}
 
-.navbar .container-fluid {
+ .container-fluid {
     display: flex;
     justify-content: space-between;
     align-items: center;
