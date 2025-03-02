@@ -13,7 +13,6 @@ productsRouter.get('/', async (req, res) => {
       sort: req.query.sort,
       query: req.query.query
     };
-
     const result = await productManager.getProducts(options);
     res.status(200).json(result);
   } catch (error) {

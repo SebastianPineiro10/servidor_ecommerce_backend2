@@ -6,13 +6,27 @@ const viewsRouter = express.Router();
 const productManager = new ProductManagerMongo();
 const cartManager = new CartManagerMongo();
 
+// Middleware para asegurarse de que existe un carrito en la sesión
+viewsRouter.use(async (req, res, next) => {
+  if (!req.session?.cartId) {
+    try {
+      const newCart = await cartManager.createCart();
+      req.session.cartId = newCart._id;
+    } catch (error) {
+      console.error('Error al crear carrito de sesión:', error);
+    }
+  }
+  next();
+});
+
 // Vista principal - Home
 viewsRouter.get('/', async (req, res) => {
   try {
     const result = await productManager.getProducts();
     res.render('home', {
       products: result.payload,
-      title: 'Productos'
+      title: 'Productos',
+      cartId: req.session?.cartId || null 
     });
   } catch (error) {
     res.status(500).send({ message: error.message });

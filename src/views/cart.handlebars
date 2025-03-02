@@ -1,202 +1,63 @@
 <div class="container mt-4">
   <h1>Tu Carrito</h1>
-  
   {{#if isEmpty}}
-    <div class="alert alert-info">
-      Tu carrito está vacío. <a href="/products">Ir a productos</a>
-    </div>
+  <div class="alert alert-info">
+    Tu carrito está vacío. <a href="/products">Ir a productos</a>
+  </div>
   {{else}}
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Subtotal</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each cart.products}}
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  {{#if product.thumbnails.length}}
-                    <img src="{{product.thumbnails.[0]}}" class="cart-product-img me-2" alt="{{product.title}}">
-                  {{/if}}
-                  <div>
-                    <h5>{{product.title}}</h5>
-                    <small class="text-muted">Código: {{product.code}}</small>
-                  </div>
-                </div>
-              </td>
-              <td>${{product.price}}</td>
-              <td>
-                <div class="input-group input-group-sm quantity-control" style="width: 130px;">
-                  <button class="btn btn-outline-secondary decrease-qty" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}" data-current-qty="{{quantity}}">-</button>
-                  <input type="number" class="form-control text-center product-qty" value="{{quantity}}" min="1" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}">
-                  <button class="btn btn-outline-secondary increase-qty" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}" data-current-qty="{{quantity}}">+</button>
-                </div>
-              </td>
-              <td>${{multiply product.price quantity}}</td>
-              <td>
-                <button class="btn btn-danger btn-sm remove-from-cart" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}">
-                  <i class="fas fa-trash"></i> Eliminar
-                </button>
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" class="text-end"><strong>Total:</strong></td>
-            <td>${{calculateTotal cart.products}}</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    
-    <div class="d-flex justify-content-between mt-3">
-      <a href="/products" class="btn btn-primary">Seguir comprando</a>
-      <button id="clearCart" class="btn btn-warning" data-cart-id="{{cart._id}}">Vaciar carrito</button>
-      <button id="checkout" class="btn btn-success">Finalizar compra</button>
-    </div>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each cart.products}}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center">
+              <img src="{{firstThumbnail product.thumbnails}}" class="cart-product-img me-2" alt="{{product.title}}">
+              <div>
+                <h5>{{product.title}}</h5>
+                <small class="text-muted">Código: {{product.code}}</small>
+              </div>
+            </div>
+          </td>
+          <td>${{product.price}}</td>
+          <td>
+            <div class="input-group input-group-sm quantity-control" style="width: 130px;">
+              <button class="btn btn-outline-secondary decrease-qty" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}" data-current-qty="{{quantity}}">-</button>
+              <input type="number" class="form-control text-center product-qty" value="{{quantity}}" min="1" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}">
+              <button class="btn btn-outline-secondary increase-qty" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}" data-current-qty="{{quantity}}">+</button>
+            </div>
+          </td>
+          <td>${{multiply product.price quantity}}</td>
+          <td>
+            <button class="btn btn-danger btn-sm remove-from-cart" data-cart-id="{{../cart._id}}" data-product-id="{{product._id}}">
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-end"><strong>Total:</strong></td>
+          <td>${{calculateTotal cart.products}}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="d-flex justify-content-between mt-3">
+    <a href="/products" class="btn btn-primary">Seguir comprando</a>
+    <button id="clearCart" class="btn btn-warning" data-cart-id="{{cart._id}}">Vaciar carrito</button>
+    <button id="checkout" class="btn btn-success">Finalizar compra</button>
+  </div>
   {{/if}}
 </div>
-
-<script>
-  // Helper para multiplicar precio por cantidad
-  function multiply(price, quantity) {
-    return (price * quantity).toFixed(2);
-  }
-  
-  // Helper para calcular el total
-  function calculateTotal(products) {
-    return products.reduce((total, item) => {
-      return total + (item.product.price * item.quantity);
-    }, 0).toFixed(2);
-  }
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    // Actualizar cantidad
-    const qtyInputs = document.querySelectorAll('.product-qty');
-    qtyInputs.forEach(input => {
-      input.addEventListener('change', async function() {
-        const cartId = this.dataset.cartId;
-        const productId = this.dataset.productId;
-        const quantity = parseInt(this.value, 10);
-        
-        if (quantity < 1) {
-          this.value = 1;
-          return;
-        }
-        
-        try {
-          const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ quantity })
-          });
-          
-          if (response.ok) {
-            window.location.reload();
-          } else {
-            const result = await response.json();
-            alert(`Error: ${result.message}`);
-          }
-        } catch (error) {
-          alert('Error al actualizar cantidad');
-          console.error(error);
-        }
-      });
-    });
-    
-    // Botones de incremento y decremento
-    const decreaseButtons = document.querySelectorAll('.decrease-qty');
-    const increaseButtons = document.querySelectorAll('.increase-qty');
-    
-    decreaseButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const input = this.parentNode.querySelector('input');
-        const currentQty = parseInt(input.value, 10);
-        if (currentQty > 1) {
-          input.value = currentQty - 1;
-          input.dispatchEvent(new Event('change'));
-        }
-      });
-    });
-    
-    increaseButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const input = this.parentNode.querySelector('input');
-        input.value = parseInt(input.value, 10) + 1;
-        input.dispatchEvent(new Event('change'));
-      });
-    });
-    
-    // Eliminar producto del carrito
-    const removeButtons = document.querySelectorAll('.remove-from-cart');
-    removeButtons.forEach(button => {
-      button.addEventListener('click', async function() {
-        const cartId = this.dataset.cartId;
-        const productId = this.dataset.productId;
-        
-        if (confirm('¿Estás seguro de eliminar este producto del carrito?')) {
-          try {
-            const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
-              method: 'DELETE'
-            });
-            
-            if (response.ok) {
-              window.location.reload();
-            } else {
-              const result = await response.json();
-              alert(`Error: ${result.message}`);
-            }
-          } catch (error) {
-            alert('Error al eliminar producto');
-            console.error(error);
-          }
-        }
-      });
-    });
-    
-    // Vaciar carrito
-    const clearCartBtn = document.getElementById('clearCart');
-    if (clearCartBtn) {
-      clearCartBtn.addEventListener('click', async function() {
-        const cartId = this.dataset.cartId;
-        
-        if (confirm('¿Estás seguro de vaciar el carrito?')) {
-          try {
-            const response = await fetch(`/api/carts/${cartId}`, {
-              method: 'DELETE'
-            });
-            
-            if (response.ok) {
-              window.location.reload();
-            } else {
-              const result = await response.json();
-              alert(`Error: ${result.message}`);
-            }
-          } catch (error) {
-            alert('Error al vaciar el carrito');
-            console.error(error);
-          }
-        }
-      });
-    }
-    
-    // Checkout (placeholder para implementación futura)
-    const checkoutBtn = document.getElementById('checkout');
-    if (checkoutBtn) {
-      checkoutBtn.addEventListener('click', function() {
-        alert('Funcionalidad de checkout en desarrollo');
-      });
-    }
-  });
-</script>

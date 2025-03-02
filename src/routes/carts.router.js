@@ -4,15 +4,24 @@ import CartManagerMongo from '../managers/cartManager.mongo.js';
 const cartsRouter = express.Router();
 const cartManager = new CartManagerMongo();
 
-// Crear un nuevo carrito
+// Crear un nuevo carrito (solo si no existe uno en la sesión)
 cartsRouter.post('/', async (req, res) => {
   try {
-    const newCart = await cartManager.createCart();
-    res.status(201).json({
-      status: 'success',
-      message: 'Carrito creado exitosamente',
-      payload: newCart
-    });
+    if (!req.session?.cartId) {
+      const newCart = await cartManager.createCart();
+      req.session.cartId = newCart._id; // Guardar el carrito creado en la sesión
+      return res.status(201).json({
+        status: 'success',
+        message: 'Carrito creado exitosamente',
+        payload: newCart
+      });
+    } else {
+      return res.status(200).json({
+        status: 'success',
+        message: 'Carrito ya existe',
+        payload: req.session.cartId
+      });
+    }
   } catch (error) {
     res.status(500).json({
       status: 'error',
@@ -25,10 +34,17 @@ cartsRouter.post('/', async (req, res) => {
 cartsRouter.get('/:cid', async (req, res) => {
   try {
     const cart = await cartManager.getCartById(req.params.cid);
-    res.status(200).json({
-      status: 'success',
-      payload: cart
-    });
+    if (cart._id.toString() === req.session.cartId.toString()) {
+      res.status(200).json({
+        status: 'success',
+        payload: cart
+      });
+    } else {
+      res.status(403).json({
+        status: 'error',
+        message: 'No autorizado para acceder a este carrito'
+      });
+    }
   } catch (error) {
     res.status(404).json({
       status: 'error',
@@ -42,6 +58,14 @@ cartsRouter.post('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const quantity = req.body.quantity || 1;
+
+    if (cid !== req.session.cartId.toString()) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'No autorizado para modificar este carrito'
+      });
+    }
+
     const updatedCart = await cartManager.addProductToCart(cid, pid, quantity);
     res.status(200).json({
       status: 'success',
@@ -60,6 +84,14 @@ cartsRouter.post('/:cid/products/:pid', async (req, res) => {
 cartsRouter.delete('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
+
+    if (cid !== req.session.cartId.toString()) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'No autorizado para modificar este carrito'
+      });
+    }
+
     const updatedCart = await cartManager.removeProductFromCart(cid, pid);
     res.status(200).json({
       status: 'success',
@@ -79,6 +111,14 @@ cartsRouter.put('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
     const { products } = req.body;
+
+    if (cid !== req.session.cartId.toString()) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'No autorizado para modificar este carrito'
+      });
+    }
+
     const updatedCart = await cartManager.updateCart(cid, products);
     res.status(200).json({
       status: 'success',
@@ -98,6 +138,14 @@ cartsRouter.put('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
+
+    if (cid !== req.session.cartId.toString()) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'No autorizado para modificar este carrito'
+      });
+    }
+
     const updatedCart = await cartManager.updateProductQuantity(cid, pid, quantity);
     res.status(200).json({
       status: 'success',
@@ -116,10 +164,18 @@ cartsRouter.put('/:cid/products/:pid', async (req, res) => {
 cartsRouter.delete('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
+
+    if (cid !== req.session.cartId.toString()) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'No autorizado para modificar este carrito'
+      });
+    }
+
     const updatedCart = await cartManager.clearCart(cid);
     res.status(200).json({
       status: 'success',
-      message: 'Carrito vaciado exitosamente',
+      message: 'Todos los productos eliminados del carrito',
       payload: updatedCart
     });
   } catch (error) {
