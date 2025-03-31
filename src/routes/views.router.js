@@ -1,23 +1,12 @@
 import express from 'express';
+import jwt from 'jsonwebtoken'; // Importamos JWT para la decodificación
 import ProductManagerMongo from '../managers/productManager.mongo.js';
-import CartManagerMongo from '../managers/cartManager.mongo.js';
+import CartManagerMongo from '../managers/cartManager.mongo.js'; // Para manejar los carritos
+import User from '../models/user.model.js'; // Asegúrate de importar tu modelo de usuario para las consultas
 
 const viewsRouter = express.Router();
 const productManager = new ProductManagerMongo();
-const cartManager = new CartManagerMongo();
-
-// Middleware para asegurarse de que existe un carrito en la sesión
-viewsRouter.use(async (req, res, next) => {
-  if (!req.session?.cartId) {
-    try {
-      const newCart = await cartManager.createCart();
-      req.session.cartId = newCart._id;
-    } catch (error) {
-      console.error('Error al crear carrito de sesión:', error);
-    }
-  }
-  next();
-});
+const cartManager = new CartManagerMongo(); // Manager para carritos
 
 // Vista principal - Home
 viewsRouter.get('/', async (req, res) => {
@@ -25,8 +14,7 @@ viewsRouter.get('/', async (req, res) => {
     const result = await productManager.getProducts();
     res.render('home', {
       products: result.payload,
-      title: 'Productos',
-      cartId: req.session?.cartId || null 
+      title: 'Productos'
     });
   } catch (error) {
     res.status(500).send({ message: error.message });
@@ -43,10 +31,8 @@ viewsRouter.get('/products', async (req, res) => {
       query: req.query.query
     };
 
-    // Construir la URL base para los enlaces de paginación
     const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}/products`;
 
-    // Construir queryString para mantener otros parámetros
     const buildQueryString = (pg) => {
       const queryParams = new URLSearchParams();
       queryParams.append('page', pg);
@@ -56,10 +42,8 @@ viewsRouter.get('/products', async (req, res) => {
       return queryParams.toString();
     };
 
-    // Obtener productos con paginación
     const result = await productManager.getProducts(options);
 
-    // Actualizar los enlaces con la URL base real
     if (result.hasPrevPage) {
       result.prevLink = `${baseUrl}?${buildQueryString(result.prevPage)}`;
     }
@@ -70,9 +54,7 @@ viewsRouter.get('/products', async (req, res) => {
 
     res.render('products', {
       products: result,
-      title: 'Catálogo de Productos',
-      // Si hay un carrito almacenado en la sesión, pasarlo a la vista
-      cartId: req.session?.cartId || null
+      title: 'Catálogo de Productos'
     });
   } catch (error) {
     res.status(500).send({ message: error.message });
@@ -85,13 +67,25 @@ viewsRouter.get('/products/:pid', async (req, res) => {
     const product = await productManager.getProductById(req.params.pid);
     res.render('product-detail', {
       product,
-      title: product.title,
-      // Si hay un carrito almacenado en la sesión, pasarlo a la vista
-      cartId: req.session?.cartId || null
+      title: product.title
     });
   } catch (error) {
     res.status(404).send({ message: error.message });
   }
+});
+
+// Vista de inicio de sesión
+viewsRouter.get('/login', (req, res) => {
+  res.render('login', {
+    title: 'Iniciar sesión'
+  });
+});
+
+// Vista de registro
+viewsRouter.get('/register', (req, res) => {
+  res.render('register', {
+    title: 'Registrarse'
+  });
 });
 
 // Vista de carrito
@@ -118,6 +112,40 @@ viewsRouter.get('/realtimeproducts', async (req, res) => {
     });
   } catch (error) {
     res.status(500).send({ message: error.message });
+  }
+});
+
+// Nueva vista de detalles del usuario
+viewsRouter.get('/user-details', async (req, res) => {
+  try {
+    const token = req.cookies?.token; // Extraer el token desde las cookies
+    if (!token) {
+      return res.status(401).send('No autorizado. Token no proporcionado.');
+    }
+
+    // Verificar y decodificar el token
+    const decoded = jwt.verify(token, 'miClaveSecreta'); // Usa la misma clave que al crear el token
+
+    // Consultar en la base de datos para obtener los datos actualizados del usuario
+    const user = await User.findById(decoded.id); // Buscar usuario por su ID
+    if (!user) {
+      return res.status(404).send('Usuario no encontrado.');
+    }
+
+    // Renderizar la vista con los datos actuales del usuario
+    res.render('userDetails', {
+      title: 'Detalles del Usuario',
+      user: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        age: user.age,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error('Error en la ruta /user-details:', error.message);
+    res.status(401).send('Token inválido o expirado.');
   }
 });
 

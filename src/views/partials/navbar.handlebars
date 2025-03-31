@@ -11,8 +11,23 @@
         </a>
         <!-- Nuevo enlace con "+" -->
         <a href="/realtimeproducts" class="cart-icon">
-            <i class="bi bi-plus-circle-fill"></i> 
+            <i class="bi bi-plus-circle-fill"></i> Añadir Producto
         </a>
+
+        {{#if user}}
+            <!-- Mostrar si el usuario está autenticado -->
+            <span>Bienvenido, {{user.name}}</span>
+            <a href="/api/session/logout" class="cart-icon">
+                <i class="bi bi-box-arrow-right"></i> Salir
+            </a>
+        {{else}}
+            <!-- Mostrar si el usuario NO está autenticado -->
+            <a href="/login" class="cart-icon">
+                <i class="bi bi-person-fill"></i> Iniciar sesión
+            </a>
+            <a href="/register" class="cart-icon">
+                <i class="bi bi-pencil-square"></i> Registrarse
+            </a>
+        {{/if}}
     </div>
 </nav>
-
